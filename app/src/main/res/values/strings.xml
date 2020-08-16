@@ -1,0 +1,55 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Pixer</string>
+
+    <!--Home-->
+    <string name="logo_discrpt">Pixer Logo</string>
+    <string name="app_discript">We analyse everything for you!</string>
+
+    <!--Select Function Page-->
+    <string name="scan_obj">SCAN OBJECT</string>
+    <string name="scan_exp">SCAN EXPRESSIONS</string>
+    <string name="scan_txt">SCAN TEXT</string>
+    <string name="scan_speech">TEXT TO SPEECH</string>
+
+    <!--Function option page headers-->
+    <string name="headerObj">OBJECTS</string>
+    <string name="headerExp">EXPRESSION</string>
+    <string name="headerTxt">TEXT</string>
+    <string name="headerFace">FACE</string>
+
+    <string name="viewRepo">View Report</string>
+
+    <string name="bicycleImg">bicycle</string>
+    <string name="flightImg">flight</string>
+    <string name="walkImg">walk</string>
+
+    <string name="scanObjCamelCase">Scan Objects</string>
+    <string name="scanExpCamelCase">Scan Expression</string>
+    <string name="scanFaceCamelCase">Scan Face</string>
+    <string name="scanTxtCamelCase">Scan Text</string>
+
+    <!--Titles for option selection page-->
+    <string name="TitleObj2">Check report to view previous history...</string>
+    <string name="TitleObj">Bare eye does not t help you. Detect multiple objects within an image, with bounding boxes.</string>
+    <string name="TitleExp">None</string>
+    <string name="TitleExp2">None</string>
+    <string name="TitleTxt2">None</string>
+
+    <!--Navigator links-->
+    <string name="aboutUs">About Us</string>
+    <string name="home">Home</string>
+    <string name="privacy">Privacy and Policy</string>
+
+    <!--Function image upload page-->
+    <string name="upload">Upload</string>
+    <string name="drop_your_image">Drop your image</string>
+
+    <!--Navigators Java-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="todo">TODO</string>
+
+
+
+</resources>
