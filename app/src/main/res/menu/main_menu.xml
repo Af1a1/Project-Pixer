@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/NavHome"
+            android:icon="@drawable/home"/>
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/NavAboutUs"
+            android:icon="@drawable/about"/>
+        <item
+            android:id="@+id/nav_privacy"
+            android:title="@string/NavPrivacy"
+            android:icon="@drawable/privacy_and_policy"/>
+
+    </group>
+</menu>

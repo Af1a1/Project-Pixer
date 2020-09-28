@@ -11,7 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExpressionReport"></activity>
+        <activity android:name=".Home"></activity>
+        <activity android:name=".PrivacyAndPolicy" />
+        <activity android:name=".AboutUs" />
+        <activity android:name=".FaceDetectionFunction" />
+        <activity android:name=".FaceDetectionReport" />
+        <activity android:name=".FaceDetectionFunctionOption" />
+        <activity android:name=".ObjectFunctionResult" />
+        <activity android:name=".ExpressionReport" />
         <activity android:name=".TextReport" />
         <activity android:name=".ObjectReport" />
         <activity android:name=".textFunctionOption" />

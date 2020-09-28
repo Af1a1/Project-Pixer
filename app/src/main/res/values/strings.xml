@@ -9,7 +9,7 @@
     <string name="scan_obj">SCAN OBJECT</string>
     <string name="scan_exp">SCAN EXPRESSIONS</string>
     <string name="scan_txt">SCAN TEXT</string>
-    <string name="scan_speech">TEXT TO SPEECH</string>
+    <string name="scan_face">SCAN FACE</string>
 
     <!--Function option page headers-->
     <string name="headerObj">OBJECTS</string>
@@ -29,27 +29,37 @@
     <string name="scanTxtCamelCase">Scan Text</string>
 
     <!--Titles for option selection page-->
-    <string name="TitleObj2">Check report to view previous history...</string>
+    <string name="TitleRepo">Check report to view previous history...</string>
     <string name="TitleObj">Bare eye does not t help you. Detect multiple objects within an image, with bounding boxes.</string>
-    <string name="TitleExp">None</string>
-    <string name="TitleExp2">None</string>
-    <string name="TitleTxt2">None</string>
+    <string name="TitleExp">True artistic expression lies in conveying emotion. Just scan and see it.</string>
+    <string name="TitleFace">Detect weather is there any human face appearing.</string>
+    <string name="TitleTxt">Scan and grab your texts</string>
 
     <!--Navigator links-->
-    <string name="aboutUs">About Us</string>
-    <string name="home">Home</string>
-    <string name="privacy">Privacy and Policy</string>
+    <string name="NavAboutUs">About Us</string>
+    <string name="NavHome">Home</string>
+    <string name="NavPrivacy">Privacy and Policy</string>
 
     <!--Function image upload page-->
     <string name="upload">Upload</string>
+    <string name="delete">Delete</string>
     <string name="drop_your_image">Drop your image</string>
+    <string name="AnalysisObject">Objects Detected</string>
+    <string name="AnalysisExpression">Expression Result</string>
+    <string name="AnalysisFace">Text Detected</string>
+    <string name="AnalysisText">Face Detected</string>
 
     <!--Navigators Java-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="todo">TODO</string>
+    <!--Report-->
+    <string name="Report">Reports</string>
+    <string name="DeleteRecord">Delete Record</string>
 
+
+    <string name="todo">TODO</string>
+    <string name="reult">Result</string>
 
 
 </resources>
