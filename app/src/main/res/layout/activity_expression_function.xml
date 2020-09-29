@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ObjectFunction">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="337dp"
+        android:layout_height="211dp"
+        android:layout_marginBottom="8dp"
+        android:lineSpacingExtra="2sp"
+        android:lineSpacingMultiplier="0.5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toTopOf="@+id/selectBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.421" />
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
@@ -17,59 +31,79 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="371dp"
-        android:layout_height="354dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/process">
-
-        <ImageView
-            android:id="@+id/imgPreview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/large_image"/>
-
-    </FrameLayout>
-
     <TextView
         android:id="@+id/process"
         android:layout_width="222dp"
         android:layout_height="45dp"
         android:layout_marginStart="104dp"
         android:layout_marginEnd="85dp"
-        android:layout_marginBottom="2dp"
         android:drawableLeft="@drawable/image"
         android:fontFamily="@font/asap"
         android:gravity="fill"
         android:text="@string/drop_your_image"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:lineSpacingMultiplier="2"
+        android:lineSpacingExtra="23px"/>
 
     <Button
-        android:id="@+id/imgPreviewBtn"
-        android:layout_width="150dp"
-        android:layout_height="73dp"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="131dp"
-        android:layout_marginBottom="131dp"
+        android:id="@+id/snapBtn"
+        android:layout_width="114dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimary"
+        android:text="snap"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/selectBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/selectBtn"
+        android:layout_width="114dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/colorPrimary"
         android:text="@string/upload"
         android:textColor="@color/colorAccent"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/detectBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/detectBtn"
+        android:layout_width="114dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/holo_blue_light"
+        android:text="detect"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.946"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="385dp"
+        android:layout_height="328dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/process"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
