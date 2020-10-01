@@ -101,7 +101,7 @@
                 android:drawableTop="@drawable/scan_option"
                 android:fontFamily="@font/asap"
                 android:padding="0dp"
-                android:text="@string/scanObjCamelCase"
+                android:text="@string/scanFaceCamelCase"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
                 android:textStyle="bold" />
