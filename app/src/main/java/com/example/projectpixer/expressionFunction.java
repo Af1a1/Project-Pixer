@@ -10,10 +10,12 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +43,8 @@ public class expressionFunction extends AppCompatActivity {
     private Button selectBtn; // To select the image from device
     private Bitmap imageBitmap;
 
+    //static final int LENGTH_LONG = 6000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +56,9 @@ public class expressionFunction extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         textView = findViewById(R.id.textView);
 
-       // textView.setLineSpacing(1f, 1.1f);
+        textView.setMovementMethod(new ScrollingMovementMethod());
+
+        // textView.setLineSpacing(1f, 1.1f);
 
         snapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,11 +107,14 @@ public class expressionFunction extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+            textView.setText("");
+
         } else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK) {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 imageBitmap = BitmapFactory.decodeStream(inputStream);
                 imageView.setImageBitmap(imageBitmap);
+                textView.setText("");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -115,6 +124,7 @@ public class expressionFunction extends AppCompatActivity {
 
     private void detectFaceFromImage() {
         try {
+
             FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
 
             FirebaseVisionFaceDetectorOptions highAccuracyOpts =
@@ -125,56 +135,73 @@ public class expressionFunction extends AppCompatActivity {
                             .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
                             .build();
 
+
             FirebaseVisionFaceDetector detector = FirebaseVision.getInstance()
                     .getVisionFaceDetector(highAccuracyOpts);
+
+
+            Toast.makeText(expressionFunction.this, "Calculating , Please wait ...", Toast.LENGTH_LONG).show();
 
             detector.detectInImage(image)
                     .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionFace>>() {
                         @Override
                         public void onSuccess(List<FirebaseVisionFace> faces) {
-                            for (FirebaseVisionFace face : faces) {
-                                Rect bounds = face.getBoundingBox();
-                                textView.append("Bounding Polygon "+ "("+bounds.centerX()+","+bounds.centerY()+")"+"\n\n");
-                                float rotY = face.getHeadEulerAngleY();  // Head is rotated to the right rotY degrees
-                                float rotZ = face.getHeadEulerAngleZ();  // Head is tilted sideways rotZ degrees
-                                textView.append("Angles of rotation " + "Y:"+rotY+","+ "Z: "+rotZ+ "\n\n");
-                                // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
-                                // nose available):
-                                // If face tracking was enabled:
-                                if (face.getTrackingId() != FirebaseVisionFace.INVALID_ID) {
-                                    int id = face.getTrackingId();
-                                    textView.append("id: " + id + "\n\n");
-                                }
-                                FirebaseVisionFaceLandmark leftEar = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR);
-                                if (leftEar != null) {
-                                    FirebaseVisionPoint leftEarPos = leftEar.getPosition();
-                                    textView.append("LeftEarPos: " + "("+leftEarPos.getX()+"," + leftEarPos.getY()+")"+"\n\n");
-                                }
-                                FirebaseVisionFaceLandmark rightEar = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EAR);
-                                if (rightEar != null) {
-                                    FirebaseVisionPoint rightEarPos = rightEar.getPosition();
-                                    textView.append("RightEarPos: " + "("+rightEarPos.getX()+","+rightEarPos.getY() +")"+ "\n\n");
-                                }
 
-                                // If contour detection was enabled:
-                                List<FirebaseVisionPoint> leftEyeContour =
-                                        face.getContour(FirebaseVisionFaceContour.LEFT_EYE).getPoints();
-                                List<FirebaseVisionPoint> upperLipBottomContour =
-                                        face.getContour(FirebaseVisionFaceContour.UPPER_LIP_BOTTOM).getPoints();
 
-                                // If classification was enabled:
-                                if (face.getSmilingProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                                    float smileProb = face.getSmilingProbability();
-                                    textView.append("SmileProbability: " + ("" + smileProb * 100).subSequence(0, 4) + "%" + "\n\n");
+                            if(faces.size() == 0){
+                                Toast.makeText(expressionFunction.this, "No Face Detected :(", Toast.LENGTH_LONG).show();
+                                textView.setText("");
+
+                            }else if(faces.size() == 1) {
+
+                                for (FirebaseVisionFace face : faces) {
+                                    Rect bounds = face.getBoundingBox();
+                                    textView.append("Bounding Polygon " + "(" + bounds.centerX() + "," + bounds.centerY() + ")" + "\n\n");
+                                    float rotY = face.getHeadEulerAngleY();  // Head is rotated to the right rotY degrees
+                                    float rotZ = face.getHeadEulerAngleZ();  // Head is tilted sideways rotZ degrees
+                                    textView.append("Angles of rotation " + "Y:" + rotY + "," + "Z: " + rotZ + "\n\n");
+                                    // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
+                                    // nose available):
+                                    // If face tracking was enabled:
+                                    if (face.getTrackingId() != FirebaseVisionFace.INVALID_ID) {
+                                        int id = face.getTrackingId();
+                                        textView.append("id: " + id + "\n\n");
+                                    }
+                                    FirebaseVisionFaceLandmark leftEar = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR);
+                                    if (leftEar != null) {
+                                        FirebaseVisionPoint leftEarPos = leftEar.getPosition();
+                                        textView.append("LeftEarPos: " + "(" + leftEarPos.getX() + "," + leftEarPos.getY() + ")" + "\n\n");
+                                    }
+                                    FirebaseVisionFaceLandmark rightEar = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EAR);
+                                    if (rightEar != null) {
+                                        FirebaseVisionPoint rightEarPos = rightEar.getPosition();
+                                        textView.append("RightEarPos: " + "(" + rightEarPos.getX() + "," + rightEarPos.getY() + ")" + "\n\n");
+                                    }
+
+                                    // If contour detection was enabled:
+                                    List<FirebaseVisionPoint> leftEyeContour =
+                                            face.getContour(FirebaseVisionFaceContour.LEFT_EYE).getPoints();
+                                    List<FirebaseVisionPoint> upperLipBottomContour =
+                                            face.getContour(FirebaseVisionFaceContour.UPPER_LIP_BOTTOM).getPoints();
+
+                                    // If classification was enabled:
+                                    if (face.getSmilingProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                                        float smileProb = face.getSmilingProbability();
+                                        textView.append("SmileProbability: " + ("" + smileProb * 100).subSequence(0, 4) + "%" + "\n\n");
+                                    }
+                                    if (face.getRightEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                                        float rightEyeOpenProb = face.getRightEyeOpenProbability();
+                                        textView.append("RightEyeOpenProbability: " + ("" + rightEyeOpenProb * 100).subSequence(0, 4) + "%" + "\n\n");
+                                    }
+                                    if (face.getLeftEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                                        float leftEyeOpenProbability = face.getLeftEyeOpenProbability();
+                                        textView.append("LeftEyeOpenProbability: " + ("" + leftEyeOpenProbability * 100).subSequence(0, 4) + "%" + "\n\n");
+                                    }
                                 }
-                                if (face.getRightEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                                    float rightEyeOpenProb = face.getRightEyeOpenProbability();
-                                    textView.append("RightEyeOpenProbability: " + ("" + rightEyeOpenProb * 100).subSequence(0, 4) + "%" + "\n\n");
-                                }
-                                if (face.getLeftEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                                    float leftEyeOpenProbability = face.getLeftEyeOpenProbability();
-                                    textView.append("LeftEyeOpenProbability: " + ("" + leftEyeOpenProbability * 100).subSequence(0, 4) + "%" + "\n\n");
-                                }
+                            }
+                            else{
+                                Toast.makeText(expressionFunction.this, "Many Faces..Capture only one face :(", Toast.LENGTH_LONG).show();
+                                textView.setText("");
                             }
                         }
                     })
@@ -183,7 +210,7 @@ public class expressionFunction extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     // Task failed with an exception
-                                    // ...
+                                    Toast.makeText(expressionFunction.this, "Error :(", Toast.LENGTH_LONG).show();
                                 }
                             });
 
