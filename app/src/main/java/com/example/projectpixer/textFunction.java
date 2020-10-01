@@ -94,12 +94,14 @@ public class textFunction extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+            textView.setText("");
         }
         else if(requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 imageBitmap = BitmapFactory.decodeStream(inputStream);
                 imageView.setImageBitmap(imageBitmap);
+                textView.setText("");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
