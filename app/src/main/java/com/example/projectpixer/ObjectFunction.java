@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +40,8 @@ public class ObjectFunction extends AppCompatActivity {
     private Button selectBtn;
     private ImageView imageView;
     private Bitmap imageBitmap;
+    private Paint myRectPaint;
+    private TextView textView;
     /*ImageView imageView;
     Button imgChooseBtn;
 
@@ -54,6 +58,7 @@ public class ObjectFunction extends AppCompatActivity {
         detectBtn = findViewById(R.id.detectBtn);
         selectBtn = findViewById(R.id.selectBtn);
         imageView = findViewById(R.id.imageView);
+        textView = findViewById(R.id.textView);
 
         snapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,12 +108,14 @@ public class ObjectFunction extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+            textView.setText("");
         }
         else if(requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 imageBitmap = BitmapFactory.decodeStream(inputStream);
                 imageView.setImageBitmap(imageBitmap);
+                textView.setText("");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -119,6 +126,10 @@ public class ObjectFunction extends AppCompatActivity {
     private void detectImage(){
 
 
+        myRectPaint = new Paint();
+        myRectPaint.setStrokeWidth(3);
+        myRectPaint.setColor(Color.RED);
+        myRectPaint.setStyle(Paint.Style.STROKE);
 
         FirebaseVisionObjectDetectorOptions options =
                 new FirebaseVisionObjectDetectorOptions.Builder()
@@ -137,10 +148,9 @@ public class ObjectFunction extends AppCompatActivity {
                             @Override
                             public void onSuccess(List<FirebaseVisionObject> detectedObjects) {
 
-                                Paint myRectPaint = new Paint();
-                                myRectPaint.setStrokeWidth(5);
-                                myRectPaint.setColor(Color.RED);
-                                myRectPaint.setStyle(Paint.Style.STROKE);
+                                if(detectedObjects.size() == 0){
+                                    Toast.makeText(ObjectFunction.this, "No Objects :(", Toast.LENGTH_LONG).show();
+                                }
 
                                 Bitmap tempBitmap = Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), Bitmap.Config.RGB_565);
                                 Canvas tempCanvas = new Canvas(tempBitmap);
@@ -154,14 +164,16 @@ public class ObjectFunction extends AppCompatActivity {
 
                                 }
                                 imageView.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
+                                textView.setTextSize(20);
+                                textView.setText("No of Objects Detected : "+ detectedObjects.size());
                             }
                         })
                 .addOnFailureListener(
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Task failed with an exception
-                                // ...
+                                Toast.makeText(ObjectFunction.this, "Error :(", Toast.LENGTH_LONG).show();
+                                textView.setText("");
                             }
                         });
 

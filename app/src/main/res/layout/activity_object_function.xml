@@ -6,16 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".ObjectFunction">
 
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/process"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/snapBtn"
+        android:layout_width="116dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/colorPrimary"
+        android:text="snap"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/process"
@@ -34,26 +49,11 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <Button
-        android:id="@+id/snapBtn"
-        android:layout_width="106dp"
-        android:layout_height="53dp"
-        android:layout_marginBottom="36dp"
-        android:background="@color/colorPrimary"
-        android:text="snap"
-        android:textColor="@color/colorAccent"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/selectBtn"
-        app:layout_constraintHorizontal_bias="0.434"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/detectBtn"
-        android:layout_width="106dp"
-        android:layout_height="53dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="36dp"
+        android:layout_width="116dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@android:color/holo_blue_light"
         android:text="detect"
         android:textColor="@color/colorAccent"
@@ -64,10 +64,10 @@
 
     <Button
         android:id="@+id/selectBtn"
-        android:layout_width="106dp"
-        android:layout_height="53dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="36dp"
+        android:layout_width="116dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@color/colorPrimary"
         android:text="@string/upload"
         android:textColor="@color/colorAccent"
@@ -76,17 +76,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/detectBtn" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="377dp"
-        android:layout_height="446dp"
-        android:layout_marginTop="12dp"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="267dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/selectBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/process"
-        app:layout_constraintVertical_bias="0.015"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.978" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="390dp"
+        android:layout_height="363dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/process"
+        app:layout_constraintVertical_bias="0.031"
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>
