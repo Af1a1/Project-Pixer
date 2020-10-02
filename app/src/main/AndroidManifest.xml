@@ -3,6 +3,12 @@
     package="com.example.projectpixer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE" />
+   <!-- <uses-permission android:name="android.permission.CAMERA"/>-->
+
 
     <application
         android:allowBackup="true"
@@ -11,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home"></activity>
+        <activity android:name=".Home"/>
         <activity android:name=".PrivacyAndPolicy" />
         <activity android:name=".AboutUs" />
         <activity android:name=".FaceDetectionFunction" />
@@ -39,6 +45,17 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>
