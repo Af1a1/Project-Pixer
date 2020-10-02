@@ -16,6 +16,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
@@ -32,6 +33,7 @@ public class FaceDetectionFunction extends AppCompatActivity {
     private Button selectBtn;
     private ImageView imageView;
     private Bitmap imageBitmap;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class FaceDetectionFunction extends AppCompatActivity {
         detectBtn = findViewById(R.id.detectBtn);
         selectBtn = findViewById(R.id.selectBtn);
         imageView = findViewById(R.id.imageView);
+        textView = findViewById(R.id.textView);
 
         snapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +93,14 @@ public class FaceDetectionFunction extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+            textView.setText("");
         }
         else if(requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 imageBitmap = BitmapFactory.decodeStream(inputStream);
                 imageView.setImageBitmap(imageBitmap);
+                textView.setText("");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -106,7 +111,7 @@ public class FaceDetectionFunction extends AppCompatActivity {
     private void detectImage(){
 
         Paint myRectPaint = new Paint();
-        myRectPaint.setStrokeWidth(5);
+        myRectPaint.setStrokeWidth(3);
         myRectPaint.setColor(Color.RED);
         myRectPaint.setStyle(Paint.Style.STROKE);
 
@@ -126,6 +131,10 @@ public class FaceDetectionFunction extends AppCompatActivity {
         Frame frame = new Frame.Builder().setBitmap(imageBitmap).build();
         SparseArray<Face> faces = faceDetector.detect(frame);
 
+        if(faces.size() == 0){
+            Toast.makeText(FaceDetectionFunction.this, "No Faces :(", Toast.LENGTH_LONG).show();
+            textView.setText("");
+        }
 
         for(int i=0; i<faces.size(); i++) {
             Face thisFace = faces.valueAt(i);
@@ -136,6 +145,8 @@ public class FaceDetectionFunction extends AppCompatActivity {
             tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myRectPaint);
         }
         imageView.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
+        textView.setTextSize(20);
+        textView.setText("No of Faces Detected : "+ faces.size());
 
     }
 
