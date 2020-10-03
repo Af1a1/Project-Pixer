@@ -149,8 +149,6 @@ public class expressionFunction extends AppCompatActivity {
     }
 
 
-
-
     //get image uri from take picture intent
    /* public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -286,7 +284,7 @@ public class expressionFunction extends AppCompatActivity {
             }
         }
     }
-
+    //insert
     private void UploadImage() {
 
         if(imageUri != null) {

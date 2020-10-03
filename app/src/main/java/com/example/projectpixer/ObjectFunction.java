@@ -3,6 +3,7 @@ package com.example.projectpixer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,11 +12,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 //import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,11 +26,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.objects.FirebaseVisionObject;
 import com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetector;
 import com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -42,12 +52,17 @@ public class ObjectFunction extends AppCompatActivity {
     private Bitmap imageBitmap;
     private Paint myRectPaint;
     private TextView textView;
-    /*ImageView imageView;
-    Button imgChooseBtn;
 
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
-    private static final int IMAGE_PICK_CODE = 1000;
-    private static final int PERMISSION_CODE = 1001;*/
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+
+    private StorageTask mUploadTask;
+    private Uri imageUri;
+    private int objects;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +74,13 @@ public class ObjectFunction extends AppCompatActivity {
         selectBtn = findViewById(R.id.selectBtn);
         imageView = findViewById(R.id.imageView);
         textView = findViewById(R.id.textView);
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference("ObjectDetection");
+
+        // Write a message to the database
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("ObjectDetection");
 
         snapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +134,7 @@ public class ObjectFunction extends AppCompatActivity {
         }
         else if(requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK){
             try {
+                imageUri = data.getData();
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 imageBitmap = BitmapFactory.decodeStream(inputStream);
                 imageView.setImageBitmap(imageBitmap);
@@ -124,120 +147,107 @@ public class ObjectFunction extends AppCompatActivity {
     }
 
     private void detectImage(){
+        String input = textView.getText().toString();
+        if(input.equals("")) {
 
 
-        myRectPaint = new Paint();
-        myRectPaint.setStrokeWidth(3);
-        myRectPaint.setColor(Color.RED);
-        myRectPaint.setStyle(Paint.Style.STROKE);
+            myRectPaint = new Paint();
+            myRectPaint.setStrokeWidth(3);
+            myRectPaint.setColor(Color.RED);
+            myRectPaint.setStyle(Paint.Style.STROKE);
 
-        FirebaseVisionObjectDetectorOptions options =
-                new FirebaseVisionObjectDetectorOptions.Builder()
-                        .setDetectorMode(FirebaseVisionObjectDetectorOptions.SINGLE_IMAGE_MODE)
-                        .enableMultipleObjects()
-                        .enableClassification()  // Optional
-                        .build();
+            FirebaseVisionObjectDetectorOptions options =
+                    new FirebaseVisionObjectDetectorOptions.Builder()
+                            .setDetectorMode(FirebaseVisionObjectDetectorOptions.SINGLE_IMAGE_MODE)
+                            .enableMultipleObjects()
+                            .enableClassification()  // Optional
+                            .build();
 
-        FirebaseVisionObjectDetector objectDetector = FirebaseVision.getInstance().getOnDeviceObjectDetector(options);
+            FirebaseVisionObjectDetector objectDetector = FirebaseVision.getInstance().getOnDeviceObjectDetector(options);
 
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
+            FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
 
-        objectDetector.processImage(image)
-                .addOnSuccessListener(
-                        new OnSuccessListener<List<FirebaseVisionObject>>() {
-                            @Override
-                            public void onSuccess(List<FirebaseVisionObject> detectedObjects) {
+            objectDetector.processImage(image)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<List<FirebaseVisionObject>>() {
+                                @Override
+                                public void onSuccess(List<FirebaseVisionObject> detectedObjects) {
 
-                                if(detectedObjects.size() == 0){
-                                    Toast.makeText(ObjectFunction.this, "No Objects :(", Toast.LENGTH_LONG).show();
+                                    objects = detectedObjects.size();
+
+                                    if (detectedObjects.size() == 0) {
+                                        Toast.makeText(ObjectFunction.this, "No Objects :(", Toast.LENGTH_LONG).show();
+                                    }
+
+                                    Bitmap tempBitmap = Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), Bitmap.Config.RGB_565);
+                                    Canvas tempCanvas = new Canvas(tempBitmap);
+                                    tempCanvas.drawBitmap(imageBitmap, 0, 0, null);
+
+                                    for (FirebaseVisionObject obj : detectedObjects) {
+                                        Integer id = obj.getTrackingId();
+                                        Rect bounds = obj.getBoundingBox();
+                                        tempCanvas.drawRect(bounds, myRectPaint);
+
+
+                                    }
+                                    imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
+                                    textView.setTextSize(20);
+                                    textView.setText("No of Objects Detected : " + detectedObjects.size());
+                                    UploadImage();
                                 }
-
-                                Bitmap tempBitmap = Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), Bitmap.Config.RGB_565);
-                                Canvas tempCanvas = new Canvas(tempBitmap);
-                                tempCanvas.drawBitmap(imageBitmap, 0, 0, null);
-
-                                for (FirebaseVisionObject obj : detectedObjects) {
-                                    Integer id = obj.getTrackingId();
-                                    Rect bounds = obj.getBoundingBox();
-                                    tempCanvas.drawRect(bounds, myRectPaint);
-
-
+                            })
+                    .addOnFailureListener(
+                            new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(ObjectFunction.this, "Error :(", Toast.LENGTH_LONG).show();
+                                    textView.setText("");
                                 }
-                                imageView.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
-                                textView.setTextSize(20);
-                                textView.setText("No of Objects Detected : "+ detectedObjects.size());
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ObjectFunction.this, "Error :(", Toast.LENGTH_LONG).show();
-                                textView.setText("");
-                            }
-                        });
-
+                            });
+        }
 
     }
 
+    private void UploadImage() {
 
+        if(imageUri != null) {
+            //Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+            StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
 
+            mUploadTask = fileReference.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(ObjectFunction.this,"Sucessfully Updated.",Toast.LENGTH_SHORT).show();
 
-        /*imageView = findViewById(R.id.imgPreview);
-        imgChooseBtn = findViewById(R.id.snapBtn);
+                            Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                            while(!uri.isComplete());
+                            Uri url = uri.getResult();
 
-        imgChooseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                            ObjectUpload upload = new ObjectUpload(url.toString(),objects );
 
-                        String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        requestPermissions(permission,PERMISSION_CODE);
-                    }
-                    else{
-
-                        pickImageFromGallery();
-
-                    }
-                }//main if
-                else{
-
-                    pickImageFromGallery();
-                }
-            }
-        });*/
-
-
-  /*  private void pickImageFromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE);
+                            String uploadId = databaseReference.push().getKey();
+                            databaseReference.child(uploadId).setValue(upload);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(ObjectFunction.this,exception.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else{
+            Toast.makeText(this,"No image selected ...",Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    private String getFileExtension(Uri uri) {
 
-            switch (requestCode){
-                case PERMISSION_CODE:{
-                    if(grantResults.length > 0 && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED){
-
-                        pickImageFromGallery();
-                    }
-                    else{
-                        Toast.makeText(this,"! Permission Denied", Toast.LENGTH_SHORT);
-                    }
-                }
-            }
+        ContentResolver cr = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(uri));
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        imageView.setImageURI(data.getData());
-
-    }*/
 }
