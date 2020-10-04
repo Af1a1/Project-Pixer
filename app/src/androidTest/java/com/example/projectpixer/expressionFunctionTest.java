@@ -14,14 +14,14 @@ import static org.junit.Assert.*;
 public class expressionFunctionTest {
 
     @Rule
-    public ActivityTestRule<expressionFunction> objectFunctionActivityTestRule = new ActivityTestRule<expressionFunction>(expressionFunction.class);
+    public ActivityTestRule<expressionFunction> exptFunctionActivityTestRule = new ActivityTestRule<expressionFunction>(expressionFunction.class);
 
     private expressionFunction mObject = null;
 
     @Before
     public void setUp() throws Exception {
 
-        mObject = objectFunctionActivityTestRule.getActivity();
+        mObject = exptFunctionActivityTestRule.getActivity();
 
     }
 

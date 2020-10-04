@@ -1,10 +1,7 @@
 package com.example.projectpixer;
 
-
 import android.view.View;
 
-import androidx.navigation.testing.TestNavHostController;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -14,13 +11,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ObjectFunctionOptionTest {
-
+public class FaceDetectionFunctionOptionTest {
 
     @Rule
-    public ActivityTestRule<ObjectFunctionOption> objectFunctionActivityTestRule = new ActivityTestRule<ObjectFunctionOption>(ObjectFunctionOption.class);
+    public ActivityTestRule<FaceDetectionFunctionOption> objectFunctionActivityTestRule = new ActivityTestRule<FaceDetectionFunctionOption>(FaceDetectionFunctionOption.class);
 
-    private ObjectFunctionOption mObject = null;
+    private FaceDetectionFunctionOption mObject = null;
 
     @Before
     public void setUp() throws Exception {
@@ -39,26 +35,11 @@ public class ObjectFunctionOptionTest {
     }
 
 
-//    @Test
-//    public void testLaunch(){
-//
-//
-//
-//    }
-
-//    @Test
-//    public void navigatorTest(){
-//
-//        TestNavHostController navController = new TestNavHostController(
-//                ApplicationProvider.getApplicationContext());
-//        navController.setGraph(R.navigation.triva);
-//
-//    }
-
     @After
     public void tearDown() throws Exception {
 
         mObject = null;
 
     }
+
 }
