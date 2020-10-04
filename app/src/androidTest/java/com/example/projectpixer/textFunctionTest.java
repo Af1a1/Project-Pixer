@@ -14,14 +14,14 @@ import static org.junit.Assert.*;
 public class textFunctionTest {
 
     @Rule
-    public ActivityTestRule<textFunction> objectFunctionActivityTestRule = new ActivityTestRule<textFunction>(textFunction.class);
+    public ActivityTestRule<textFunction> textFunctionActivityTestRule = new ActivityTestRule<textFunction>(textFunction.class);
 
     private textFunction mObject = null;
 
     @Before
     public void setUp() throws Exception {
 
-        mObject = objectFunctionActivityTestRule.getActivity();
+        mObject = textFunctionActivityTestRule.getActivity();
 
     }
 
