@@ -184,7 +184,10 @@ public class expressionFunction extends AppCompatActivity {
 
     private void detectFaceFromImage() {
         String input = textView.getText().toString();
-        if(input.equals("")) {
+        if(imageBitmap == null){
+            Toast.makeText(expressionFunction.this, "Please Upload a image first..", Toast.LENGTH_SHORT).show();
+        }
+        else if(input.equals("")) {
             try {
 
                 FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);

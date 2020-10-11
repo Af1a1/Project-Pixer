@@ -148,7 +148,10 @@ public class ObjectFunction extends AppCompatActivity {
 
     private void detectImage(){
         String input = textView.getText().toString();
-        if(input.equals("")) {
+        if(imageBitmap == null){
+            Toast.makeText(ObjectFunction.this, "Please Upload a image first..", Toast.LENGTH_SHORT).show();
+        }
+        else if(input.equals("")) {
 
 
             myRectPaint = new Paint();
