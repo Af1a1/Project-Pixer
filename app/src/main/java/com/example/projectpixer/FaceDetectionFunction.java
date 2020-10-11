@@ -142,7 +142,10 @@ public class FaceDetectionFunction extends AppCompatActivity {
     private void detectImage(){
 
         String input = textView.getText().toString();
-        if(input.equals("")) {
+        if(imageBitmap == null){
+            Toast.makeText(FaceDetectionFunction.this, "Please Upload a image first..", Toast.LENGTH_SHORT).show();
+        }
+        else if(input.equals("")) {
 
             Paint myRectPaint = new Paint();
             myRectPaint.setStrokeWidth(5);

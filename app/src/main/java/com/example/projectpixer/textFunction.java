@@ -140,9 +140,10 @@ public class textFunction extends AppCompatActivity {
 
 
         String input = textView.getText().toString();
-        if(input.equals(""))
-
-        {
+        if(imageBitmap == null){
+            Toast.makeText(textFunction.this, "Please Upload a image first..", Toast.LENGTH_SHORT).show();
+        }
+        else if(input.equals("")) {
 
             FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
             FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
