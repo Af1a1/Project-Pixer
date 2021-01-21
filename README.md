@@ -5,10 +5,11 @@ An android app developed with Google Machine Learning API’s. You can detect ob
 
 ## Screenshot 
 ### Welcome
-![Screenshot](welcome.PNG)
+![Screenshot](welcome.PNG) <br>
 ### Function selection 
-![Screenshot](Function Selection.PNG)
+![Screenshot](Function Selection.PNG) <br>
 ### Function option(Ex: Object)
-![Screenshot](Object Selection Function.PNG)
+![Screenshot](Object Selection Function.PNG)<br>
 ### Image selection
-![Screenshot](Expression Result.PNG)
+![Screenshot](Expression Result.PNG)<br>
+ 
